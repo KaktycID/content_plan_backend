@@ -1,0 +1,46 @@
+package content.plan.board.structure;
+
+import content.plan.users.structure.Users;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.sql.Timestamp;
+import java.time.Instant;
+
+@Entity
+@Table(name = "date_plan")
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
+public class DatePlan {
+
+    @Id
+    @GeneratedValue(generator = "date_plan_seq", strategy = GenerationType.SEQUENCE)
+    @Column(name = "id", updatable = false, nullable = false)
+    private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "board_id", updatable = false, nullable = false)
+    private Board boardId;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id", updatable = false, nullable = false)
+    private Users authorId;
+
+    @Column(name = "planned_date", updatable = false, nullable = false)
+    private Timestamp plannedDate;
+
+    @Column(name = "create_date", updatable = false, nullable = false)
+    private Instant createDate;
+
+    @Column(name = "update_date", updatable = false, nullable = true)
+    private Instant updateDate;
+
+    @Column(name = "is_active", updatable = false, nullable = false)
+    private boolean isActive;
+
+}
