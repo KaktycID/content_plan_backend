@@ -37,7 +37,7 @@ public class DatePlan {
     @Column(name = "create_date", updatable = false, nullable = false)
     private Instant createDate;
 
-    @Column(name = "update_date", updatable = false, nullable = true)
+    @Column(name = "update_date", updatable = false)
     private Instant updateDate;
 
     @Column(name = "is_active", updatable = false, nullable = false)

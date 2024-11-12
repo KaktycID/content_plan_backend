@@ -2,9 +2,7 @@ package content.plan.board.structure;
 
 import content.plan.users.structure.Users;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
@@ -30,7 +28,7 @@ public class Board {
     @Column(name = "create_date", updatable = false, nullable = false)
     private Instant createDate;
 
-    @Column(name = "update_date", updatable = false, nullable = true)
+    @Column(name = "update_date", updatable = false)
     private Instant updateDate;
 
     @Column(name = "is_active", updatable = false, nullable = false)

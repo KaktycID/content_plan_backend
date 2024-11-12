@@ -3,8 +3,6 @@ package content.plan.board.service;
 import content.plan.board.dto.BoardDTO;
 import content.plan.board.repository.BoardRepository;
 import content.plan.board.structure.Board;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
