@@ -1,5 +1,6 @@
 package content.plan.users.structure;
 
+import content.plan.board.structure.ContentPlanAbstractBaseEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,32 +15,23 @@ import java.time.Instant;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Users {
+public class Users extends ContentPlanAbstractBaseEntity {
 
     @Id
     @GeneratedValue(generator = "users_seq", strategy = GenerationType.SEQUENCE)
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
-    @Column(name = "email", updatable = false, nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Column(name = "password", updatable = false, nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "name", updatable = false, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @ManyToOne
-    @JoinColumn(name = "icon_id", updatable = false, nullable = false)
-    private DictIcons iconId;
-
-    @Column(name = "create_date", updatable = false, nullable = false)
-    private Instant createDate;
-
-    @Column(name = "update_date", updatable = false)
-    private Instant updateDate;
-
-    @Column(name = "is_active", updatable = false, nullable = false)
-    private boolean isActive;
+    @OneToOne
+    @JoinColumn(name = "icon_id", nullable = false)
+    private int icon;
 }

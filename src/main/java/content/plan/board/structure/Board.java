@@ -1,17 +1,14 @@
 package content.plan.board.structure;
 
-import content.plan.users.structure.Users;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.time.Instant;
 
 @Entity
 @Table(name = "boards")
 @Getter
 @Setter
-public class Board {
+public class Board extends ContentPlanAbstractBaseEntity{
 
     @Id
     @GeneratedValue(generator = "board_seq", strategy = GenerationType.SEQUENCE)
@@ -20,17 +17,9 @@ public class Board {
 
     @ManyToOne
     @JoinColumn(name = "author_id", updatable = false, nullable = false)
-    private Users authorId;
+    private Long authorId;
 
-    @Column(name = "name", updatable = false, nullable = false)
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "create_date", updatable = false, nullable = false)
-    private Instant createDate;
-
-    @Column(name = "update_date", updatable = false)
-    private Instant updateDate;
-
-    @Column(name = "is_active", updatable = false, nullable = false)
-    private boolean isActive;
 }

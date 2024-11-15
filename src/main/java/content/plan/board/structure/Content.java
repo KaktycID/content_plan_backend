@@ -15,7 +15,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Content {
+public class Content extends ContentPlanAbstractBaseEntity{
 
     @Id
     @GeneratedValue(generator = "content_seq", strategy = GenerationType.SEQUENCE)
@@ -49,12 +49,4 @@ public class Content {
     @Column(name = "audio", updatable = false, nullable = false)
     private String audio;
 
-    @Column(name = "create_date", updatable = false, nullable = false)
-    private Instant createDate;
-
-    @Column(name = "update_date", updatable = false)
-    private Instant updateDate;
-
-    @Column(name = "is_active", updatable = false, nullable = false)
-    private boolean isActive;
 }

@@ -15,7 +15,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Comments {
+public class Comments extends ContentPlanAbstractBaseEntity{
 
     @Id
     @GeneratedValue(generator = "comment_seq", strategy = GenerationType.SEQUENCE)
@@ -36,13 +36,4 @@ public class Comments {
 
     @Column(name = "comment", updatable = false, nullable = false)
     private String comment;
-
-    @Column(name = "create_date", updatable = false, nullable = false)
-    private Instant createDate;
-
-    @Column(name = "update_date", updatable = false)
-    private Instant updateDate;
-
-    @Column(name = "is_active", updatable = false, nullable = false)
-    private boolean isActive;
 }

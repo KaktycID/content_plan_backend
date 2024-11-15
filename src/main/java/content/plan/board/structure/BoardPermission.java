@@ -33,5 +33,5 @@ public class BoardPermission {
     private Users userId;
 
     @Column(name = "is_active", updatable = false, nullable = false)
-    private boolean isActive;
+    private boolean active;
 }

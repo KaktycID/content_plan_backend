@@ -3,6 +3,8 @@ package content.plan.board.dto;
 import content.plan.users.dto.UsersDTO;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -12,9 +14,9 @@ import lombok.*;
 public class BoardDTO {
 
     private Long id;
-    private UsersDTO authorId;
+    private Long author;
     private String name;
     private Long createDate;
     private Long updateDate;
-    private boolean isActive;
+    private boolean active;
 }

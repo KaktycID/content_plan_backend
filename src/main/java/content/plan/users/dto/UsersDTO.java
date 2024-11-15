@@ -18,8 +18,8 @@ public class UsersDTO {
     private String email;
     private String password;
     private String name;
-    private DictDTO iconId;
-    private Instant createDate;
-    private Instant updateDate;
-    private boolean isActive;
+    private int icon;
+    private Long createDate;
+    private Long updateDate;
+    private boolean active;
 }

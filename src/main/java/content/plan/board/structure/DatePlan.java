@@ -16,7 +16,7 @@ import java.time.Instant;
 @NoArgsConstructor
 @Getter
 @Setter
-public class DatePlan {
+public class DatePlan extends ContentPlanAbstractBaseEntity{
 
     @Id
     @GeneratedValue(generator = "date_plan_seq", strategy = GenerationType.SEQUENCE)
@@ -33,14 +33,5 @@ public class DatePlan {
 
     @Column(name = "planned_date", updatable = false, nullable = false)
     private Timestamp plannedDate;
-
-    @Column(name = "create_date", updatable = false, nullable = false)
-    private Instant createDate;
-
-    @Column(name = "update_date", updatable = false)
-    private Instant updateDate;
-
-    @Column(name = "is_active", updatable = false, nullable = false)
-    private boolean isActive;
 
 }
