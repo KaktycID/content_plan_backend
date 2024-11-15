@@ -1,9 +1,7 @@
 package content.plan.board.dto;
 
-import content.plan.users.dto.UsersDTO;
 import lombok.*;
 
-import java.time.LocalDate;
 
 @Data
 @Builder

@@ -1,11 +1,8 @@
 package content.plan.users.mapper;
 
-import content.plan.board.dto.DictDTO;
 import content.plan.users.dto.UsersDTO;
 import content.plan.users.structure.Users;
 import org.springframework.stereotype.Component;
-
-import java.time.Instant;
 
 @Component
 public class UsersDTOMapper {

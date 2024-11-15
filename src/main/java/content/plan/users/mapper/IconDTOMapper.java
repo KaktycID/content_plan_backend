@@ -15,7 +15,7 @@ public class IconDTOMapper {
     }
 
     public DictIcons mapIcon(DictDTO icon) {
-        return DictIcons.builder()
+        return DictDTO.builder()
                 .id(icon.getId())
                 .title(icon.getTitle())
                 .build();

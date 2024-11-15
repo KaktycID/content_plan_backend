@@ -6,14 +6,12 @@ import content.plan.board.repository.BoardRepository;
 import content.plan.board.structure.Board;
 import content.plan.users.mapper.UsersDTOMapper;
 import content.plan.users.repository.UsersRepository;
-import content.plan.users.structure.Users;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @Slf4j

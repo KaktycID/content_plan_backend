@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Timestamp;
-import java.time.Instant;
 
 @Entity
 @Table(name = "date_plan")

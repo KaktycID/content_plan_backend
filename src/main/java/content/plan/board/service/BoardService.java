@@ -1,8 +1,6 @@
 package content.plan.board.service;
 
 import content.plan.board.dto.BoardDTO;
-import content.plan.board.structure.Board;
-import content.plan.users.structure.Users;
 
 import java.util.List;
 

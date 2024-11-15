@@ -1,7 +1,5 @@
 package content.plan.users.service;
 
-import content.plan.board.mapper.DictDTOMapper;
-import content.plan.board.repository.BoardRepository;
 import content.plan.users.dto.UsersDTO;
 import content.plan.users.mapper.IconDTOMapper;
 import content.plan.users.mapper.UsersDTOMapper;
