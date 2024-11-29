@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class DictContentType {
+public class ContentType {
 
         @Id
         @GeneratedValue(generator = "dict_content_type_seq", strategy = GenerationType.SEQUENCE)

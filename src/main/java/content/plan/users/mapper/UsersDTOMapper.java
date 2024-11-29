@@ -1,13 +1,14 @@
 package content.plan.users.mapper;
 
 import content.plan.users.dto.UsersDTO;
+import content.plan.users.service.IconServiceImpl;
 import content.plan.users.structure.Users;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UsersDTOMapper {
 
-    IconDTOMapper mapper;
+    IconServiceImpl service;
 
     public UsersDTO mapUser(Users users) {
         return UsersDTO.builder()
@@ -15,7 +16,7 @@ public class UsersDTOMapper {
                 .email(users.getEmail())
                 .password(users.getPassword())
                 .name(users.getName())
-                .icon(mapper.mapIconToDTO(users.getIcon()))
+                .icon(service.getById(users.getIcon()))
                 .active(users.isActive())
                 .build();
     }

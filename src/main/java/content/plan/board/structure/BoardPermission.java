@@ -22,15 +22,15 @@ public class BoardPermission {
 
     @ManyToOne
     @JoinColumn(name = "board_id", updatable = false, nullable = false)
-    private Board boardId;
+    private Long boardId;
 
     @ManyToOne
     @JoinColumn(name = "permission_type", updatable = false, nullable = false)
-    private DictPermissionType permissionType;
+    private int permissionType;
 
     @ManyToOne
     @JoinColumn(name = "user_id", updatable = false, nullable = false)
-    private Users userId;
+    private Long userId;
 
     @Column(name = "is_active", updatable = false, nullable = false)
     private boolean active;

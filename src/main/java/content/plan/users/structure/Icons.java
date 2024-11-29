@@ -1,18 +1,16 @@
 package content.plan.users.structure;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Builder
 @Entity
 @Table(name = "dict_icons")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class DictIcons {
+public class Icons {
 
     @Id
     @GeneratedValue(generator = "dict_icons_seq", strategy = GenerationType.SEQUENCE)

@@ -22,15 +22,15 @@ public class Content extends ContentPlanAbstractBaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "date_plan_id", updatable = false, nullable = false)
-    private DatePlan datePlanId;
+    private Long datePlanId;
 
     @ManyToOne
     @JoinColumn(name = "author_id", updatable = false, nullable = false)
-    private Users authorId;
+    private Long authorId;
 
     @ManyToOne
     @JoinColumn(name = "type_id", updatable = false, nullable = false)
-    private DictContentType typeId;
+    private int typeId;
 
     @Column(name = "title", updatable = false, nullable = false)
     private String title;

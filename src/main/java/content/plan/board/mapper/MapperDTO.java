@@ -1,6 +1,6 @@
-package content.plan.board.dto;
+package content.plan.board.mapper;
 
-import content.plan.users.dto.UsersDTO;
+import content.plan.board.dto.DictDTO;
 import lombok.*;
 
 @Data
@@ -9,11 +9,12 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class CommentDTO {
+public class MapperDTO {
 
     private Long id;
-    private UsersDTO author;
-    private String comment;
+    private Long entityOne;
+    private Long entityTwo;
+    private DictDTO type;
     private Long createDate;
     private Long updateDate;
     private boolean active;

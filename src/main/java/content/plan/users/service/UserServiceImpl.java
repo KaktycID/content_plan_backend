@@ -48,11 +48,13 @@ public class UserServiceImpl implements UserService{
                 user.setName(userDTO.getName());
             }
 
-            if ((user.getIcon()!=userDTO.getIcon())) {
-                user.setIcon(userDTO.getIcon());
+            if ((user.getIcon()!=userDTO.getIcon().getId())) {
+                user.setIcon(userDTO.getIcon().getId());
             }
         }
     }
+
+
 
     @Override
     public void delete(Long id) {

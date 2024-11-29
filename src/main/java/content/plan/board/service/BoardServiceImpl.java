@@ -6,6 +6,7 @@ import content.plan.board.repository.BoardRepository;
 import content.plan.board.structure.Board;
 import content.plan.users.mapper.UsersDTOMapper;
 import content.plan.users.repository.UsersRepository;
+import content.plan.users.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,7 +21,7 @@ public class BoardServiceImpl implements BoardService{
 
     private static DictDTOMapper mapper;
     private static UsersDTOMapper userMapper;
-
+    private static UserServiceImpl service;
     private final BoardRepository repository;
 
     UsersRepository users;
@@ -50,7 +51,7 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public BoardDTO update(BoardDTO boardDTO, Long id) {
+    public BoardDTO update(Long id, BoardDTO boardDTO) {
         boolean active = Boolean.TRUE.equals(boardDTO.isActive());
         String name = boardDTO.getName();
         Board board = repository.findById(id).orElseThrow();
@@ -65,16 +66,19 @@ public class BoardServiceImpl implements BoardService{
 
         else {
             board.setActive(false);
+            board.setUpdateDate(ZonedDateTime.now());
         }
 
         return mapToDto(board);
     }
 
+
+
     public static BoardDTO mapToDto(Board board) {
 
         return BoardDTO.builder()
                 .id(board.getId())
-                .author(board.getAuthorId())
+                .author(service.getById(board.getAuthorId()))
                 .name(board.getName())
                 .createDate(board.getCreateDate().toInstant().toEpochMilli())
                 .updateDate(board.getUpdateDate().toInstant().toEpochMilli())
@@ -84,11 +88,9 @@ public class BoardServiceImpl implements BoardService{
 
     public static Board mapToEntity(BoardDTO boardDto) {
         Board board = new Board();
-        board.setAuthorId(board.getAuthorId());
+        board.setAuthorId(boardDto.getAuthor().getId());
         board.setName(boardDto.getName());
         return board;
     }
 
-//    board.setCreateDate(ZonedDateTime.now());
-//        board.setActive(true);
 }

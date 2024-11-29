@@ -24,11 +24,11 @@ public class DatePlan extends ContentPlanAbstractBaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "board_id", updatable = false, nullable = false)
-    private Board boardId;
+    private Long boardId;
 
     @ManyToOne
     @JoinColumn(name = "author_id", updatable = false, nullable = false)
-    private Users authorId;
+    private Long authorId;
 
     @Column(name = "planned_date", updatable = false, nullable = false)
     private Timestamp plannedDate;

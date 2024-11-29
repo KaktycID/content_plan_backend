@@ -11,6 +11,6 @@ public interface BoardService {
 
     BoardDTO create(BoardDTO boardDTO);
 
-    BoardDTO update(BoardDTO boardDTO, Long id);
+    BoardDTO update(Long id, BoardDTO boardDTO);
 
 }

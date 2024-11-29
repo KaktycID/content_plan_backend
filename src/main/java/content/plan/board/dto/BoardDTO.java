@@ -1,5 +1,6 @@
 package content.plan.board.dto;
 
+import content.plan.users.dto.UsersDTO;
 import lombok.*;
 
 
@@ -12,7 +13,7 @@ import lombok.*;
 public class BoardDTO {
 
     private Long id;
-    private Long author;
+    private UsersDTO author;
     private String name;
     private Long createDate;
     private Long updateDate;

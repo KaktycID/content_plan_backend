@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class DictPermissionType {
+public class PermissionType {
 
     @Id
     @GeneratedValue(generator = "dict_permission_type_seq", strategy = GenerationType.SEQUENCE)

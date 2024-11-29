@@ -1,6 +1,5 @@
 package content.plan.board.structure;
 
-import content.plan.users.structure.Users;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class Comments extends ContentPlanAbstractBaseEntity{
+public class Comment extends ContentPlanAbstractBaseEntity{
 
     @Id
     @GeneratedValue(generator = "comment_seq", strategy = GenerationType.SEQUENCE)
@@ -21,17 +20,9 @@ public class Comments extends ContentPlanAbstractBaseEntity{
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "content_id", updatable = false, nullable = false)
-    private Content contentId;
-
-    @ManyToOne
-    @JoinColumn(name = "content_field_id", updatable = false, nullable = false)
-    private DictContentFieldType contentFieldId;
-
-    @ManyToOne
     @JoinColumn(name = "author_id", updatable = false, nullable = false)
-    private Users authorId;
+    private Long authorId;
 
-    @Column(name = "comment", updatable = false, nullable = false)
+    @Column(name = "comment", nullable = false)
     private String comment;
 }
