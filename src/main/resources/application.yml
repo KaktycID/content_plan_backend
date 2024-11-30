@@ -1,0 +1,10 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/content_plan
+    username: postgres
+    password: admin12345
+server:
+  port: 8088
+logging:
+  level:
+    content.plan: debug
