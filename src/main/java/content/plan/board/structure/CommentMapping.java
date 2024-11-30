@@ -21,7 +21,7 @@ public class CommentMapping extends ContentPlanAbstractBaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "content_id", updatable = false, nullable = false)
-    private Long contentId;
+    private Long fieldId;
 
     @ManyToOne
     @JoinColumn(name = "comment_id", updatable = false, nullable = false)

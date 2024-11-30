@@ -1,30 +1,27 @@
 package content.plan.board.service;
 
 import content.plan.board.dto.BoardDTO;
-import content.plan.board.mapper.DictDTOMapper;
 import content.plan.board.repository.BoardRepository;
 import content.plan.board.structure.Board;
-import content.plan.users.mapper.UsersDTOMapper;
-import content.plan.users.repository.UsersRepository;
 import content.plan.users.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
+import java.sql.Timestamp;
+
 import java.util.List;
+
+import static content.plan.board.mapper.Mapper.getActualTime;
 
 @RequiredArgsConstructor
 @Slf4j
 @Service
 public class BoardServiceImpl implements BoardService{
 
-    private static DictDTOMapper mapper;
-    private static UsersDTOMapper userMapper;
     private static UserServiceImpl service;
     private final BoardRepository repository;
 
-    UsersRepository users;
 
     @Override
     public BoardDTO getById(Long id) {
@@ -44,7 +41,7 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public BoardDTO create(BoardDTO boardDTO) {
         Board board = mapToEntity(boardDTO);
-        board.setCreateDate(ZonedDateTime.now());
+        board.setCreateDate(getActualTime());
         board.setActive(true);
         repository.save(board);
         return mapToDto(board);
@@ -60,18 +57,17 @@ public class BoardServiceImpl implements BoardService{
 
             if (!name.equals(board.getName())) {
                 board.setName(name);
-                board.setUpdateDate(ZonedDateTime.now());
+                board.setUpdateDate(getActualTime());
             }
         }
 
         else {
             board.setActive(false);
-            board.setUpdateDate(ZonedDateTime.now());
+            board.setUpdateDate(getActualTime());
         }
 
         return mapToDto(board);
     }
-
 
 
     public static BoardDTO mapToDto(Board board) {
@@ -83,13 +79,17 @@ public class BoardServiceImpl implements BoardService{
                 .createDate(board.getCreateDate().toInstant().toEpochMilli())
                 .updateDate(board.getUpdateDate().toInstant().toEpochMilli())
                 .active(board.isActive())
-        .build();
+                .build();
     }
 
     public static Board mapToEntity(BoardDTO boardDto) {
         Board board = new Board();
+        board.setId(board.getId());
         board.setAuthorId(boardDto.getAuthor().getId());
         board.setName(boardDto.getName());
+        board.setCreateDate(new Timestamp(boardDto.getCreateDate()));
+        board.setUpdateDate(new Timestamp(boardDto.getUpdateDate()));
+        board.setActive(boardDto.isActive());
         return board;
     }
 

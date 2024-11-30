@@ -1,20 +1,20 @@
 package content.plan.board.service;
 
-import content.plan.board.dto.BoardDTO;
 import content.plan.board.dto.CommentDTO;
 import content.plan.board.mapper.MapperDTO;
 import content.plan.board.repository.CommentMappingRepository;
 import content.plan.board.repository.CommentRepository;
 import content.plan.board.structure.Comment;
-import content.plan.board.structure.CommentMapping;
 import content.plan.users.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.ZonedDateTime;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import static content.plan.board.mapper.Mapper.getActualTime;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -31,8 +31,9 @@ public class CommentServiceImpl implements CommentService{
         Comment comment = repository.findById(id).orElseThrow();
         if (comment.isActive()) {
             return mapToDto(comment);
+        } else {
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -49,41 +50,31 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public CommentDTO create(Long contentId, CommentDTO commentDTO) {
         Comment comment = mapToEntity(commentDTO);
-        comment.setCreateDate(ZonedDateTime.now());
+        comment.setCreateDate(getActualTime());
         comment.setActive(true);
         repository.save(comment);
         return mapToDto(comment);
     }
 
     @Override
-    public CommentDTO update(Long id, Long entityId, CommentDTO commentDTO) {
+    public CommentDTO update(Long commentId, Long entityId, CommentDTO commentDTO) {
         boolean active = Boolean.TRUE.equals(commentDTO.isActive());
-        Comment comment = repository.findById(id).orElseThrow();
-        List<CommentMapping> mappingIds = mappingRepository.findAll().stream()
-                .filter(i ->i.getContentId().equals(entityId)
-                        && i.getCommentId().equals(id))
-                .toList();
+        Comment comment = repository.findById(commentId).orElseThrow();
 
         if (!active) {
 
             comment.setComment(commentDTO.getComment());
-            comment.setUpdateDate(ZonedDateTime.now());
-            repository.save(comment);
+            comment.setUpdateDate(getActualTime());
+
         } else {
 
             comment.setActive(false);
-            comment.setUpdateDate(ZonedDateTime.now());
-            repository.save(comment);
-
-            for (CommentMapping mappingId : mappingIds) {
-                mappingId.setActive(false);
-                commentMappingService.update(mappingId.getId(),
-                        CommentMappingImp.mapToDto(mappingId));
-                mappingRepository.save(mappingId);
-            }
+            comment.setUpdateDate(getActualTime());
+            commentMappingService.delete(commentId, entityId);
         }
+        repository.save(comment);
 
-        return null;
+        return mapToDto(comment);
     }
 
     public static CommentDTO mapToDto(Comment comment) {
@@ -100,8 +91,12 @@ public class CommentServiceImpl implements CommentService{
 
     public static Comment mapToEntity(CommentDTO commentDTO) {
         Comment comment = new Comment();
+        comment.setId(comment.getId());
         comment.setAuthorId(commentDTO.getAuthor().getId());
         comment.setComment(commentDTO.getComment());
+        comment.setCreateDate(new Timestamp(commentDTO.getCreateDate()));
+        comment.setUpdateDate(new Timestamp(commentDTO.getUpdateDate()));
+        comment.setActive(commentDTO.isActive());
         return comment;
     }
 }

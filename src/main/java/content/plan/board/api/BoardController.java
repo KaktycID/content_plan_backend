@@ -30,7 +30,7 @@ public class BoardController {
     }
 
     @PatchMapping("/{id}")
-    public BoardDTO patch(@PathVariable Long id, @RequestBody BoardDTO request) {
+    public BoardDTO update(@PathVariable Long id, @RequestBody BoardDTO request) {
         return boardService.update(id, request);
     }
 

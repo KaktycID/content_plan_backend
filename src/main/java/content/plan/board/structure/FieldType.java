@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ContentField {
+public class FieldType {
 
     @Id
     @GeneratedValue(generator = "dict_content_field_type_seq", strategy = GenerationType.SEQUENCE)

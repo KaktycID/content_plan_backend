@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import static content.plan.board.mapper.DictDTOMapper.mapIcons;
+import static content.plan.board.mapper.Mapper.mapIcons;
 
 @RequiredArgsConstructor
 @Slf4j

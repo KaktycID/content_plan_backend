@@ -13,7 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.AccessType;
 
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -26,12 +26,12 @@ public abstract class ContentPlanAbstractBaseEntity implements Serializable {
     @CreationTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date", updatable = false)
-    protected ZonedDateTime createDate;
+    protected Timestamp createDate;
 
     @UpdateTimestamp
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "update_date")
-    protected ZonedDateTime updateDate;
+    protected Timestamp updateDate;
 
     @Column(name = "is_active")
     protected boolean active;
