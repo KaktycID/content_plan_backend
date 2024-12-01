@@ -1,6 +1,6 @@
 package content.plan.board.dto;
 
-import content.plan.users.dto.UsersDTO;
+import content.plan.users.dto.ResponseUserDTO;
 import lombok.*;
 
 @Data
@@ -13,7 +13,7 @@ public class ContentDTO {
 
     private Long id;
     private DatePlanDTO datePlan;
-    private UsersDTO author;
+    private ResponseUserDTO author;
     private DictDTO type;
     private String title;
     private String contentFile;

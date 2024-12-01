@@ -1,16 +1,17 @@
 package content.plan.board.service;
 
-import content.plan.board.dto.BoardDTO;
+import content.plan.board.dto.RequestBoardDTO;
+import content.plan.board.dto.ResponseBoardDTO;
 
 import java.util.List;
 
 public interface BoardService {
 
-    BoardDTO getById(Long id);
-    List<BoardDTO> getAllByAuthor(Long authorId);
+    ResponseBoardDTO getById(Long id);
+    List<ResponseBoardDTO> getAllByAuthor(Long authorId);
 
-    BoardDTO create(BoardDTO boardDTO);
+    ResponseBoardDTO create(RequestBoardDTO requestBoardDTO);
 
-    BoardDTO update(Long id, BoardDTO boardDTO);
+    ResponseBoardDTO update(Long id, RequestBoardDTO requestBoardDTO);
 
 }

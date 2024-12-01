@@ -1,18 +1,21 @@
 package content.plan.board.service;
 
-import content.plan.board.dto.BoardDTO;
+import content.plan.board.dto.RequestBoardDTO;
+import content.plan.board.dto.ResponseBoardDTO;
 import content.plan.board.repository.BoardRepository;
 import content.plan.board.structure.Board;
 import content.plan.users.service.UserServiceImpl;
+import content.plan.users.structure.Users;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import static content.plan.board.mapper.Mapper.getActualTime;
+import static content.plan.board.mapper.DictionaryMapper.getActualTime;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -21,26 +24,31 @@ public class BoardServiceImpl implements BoardService{
 
     private static UserServiceImpl service;
     private final BoardRepository repository;
+    private final UserServiceImpl userMapper;
 
 
     @Override
-    public BoardDTO getById(Long id) {
+    public ResponseBoardDTO getById(Long id) {
         Board board = repository.findById(id).orElseThrow();
         return mapToDto(board);
     }
 
     @Override
-    public List<BoardDTO> getAllByAuthor(Long authorId) {
-        return repository.findAll()
+    public List<ResponseBoardDTO> getAllByAuthor(Long authorId) {
+        List<Board> boards = repository.findAll()
                 .stream()
-                .filter(i -> i.getId().equals(authorId) && i.isActive())
-                .map(BoardServiceImpl::mapToDto)
+                .filter(i -> i.getAuthorId().getId().equals(authorId) && i.isActive())
                 .toList();
+        List<ResponseBoardDTO> responseBoardDtoList = new ArrayList<>();
+        for (Board board : boards) {
+            responseBoardDtoList.add(mapToDto(board));
+        }
+        return responseBoardDtoList;
     }
 
     @Override
-    public BoardDTO create(BoardDTO boardDTO) {
-        Board board = mapToEntity(boardDTO);
+    public ResponseBoardDTO create(RequestBoardDTO requestBoardDTO) {
+        Board board = mapToEntity(requestBoardDTO);
         board.setCreateDate(getActualTime());
         board.setActive(true);
         repository.save(board);
@@ -48,9 +56,9 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public BoardDTO update(Long id, BoardDTO boardDTO) {
-        boolean active = Boolean.TRUE.equals(boardDTO.isActive());
-        String name = boardDTO.getName();
+    public ResponseBoardDTO update(Long id, RequestBoardDTO requestBoardDTO) {
+        boolean active = Boolean.TRUE.equals(requestBoardDTO.isActive());
+        String name = requestBoardDTO.getName();
         Board board = repository.findById(id).orElseThrow();
 
         if (!active) {
@@ -70,11 +78,11 @@ public class BoardServiceImpl implements BoardService{
     }
 
 
-    public static BoardDTO mapToDto(Board board) {
+    public ResponseBoardDTO mapToDto(Board board) {
 
-        return BoardDTO.builder()
+        return ResponseBoardDTO.builder()
                 .id(board.getId())
-                .author(service.getById(board.getAuthorId()))
+                .author(userMapper.mapToDto(board.getAuthorId()))
                 .name(board.getName())
                 .createDate(board.getCreateDate().toInstant().toEpochMilli())
                 .updateDate(board.getUpdateDate().toInstant().toEpochMilli())
@@ -82,14 +90,24 @@ public class BoardServiceImpl implements BoardService{
                 .build();
     }
 
-    public static Board mapToEntity(BoardDTO boardDto) {
+    public Board mapToEntity(RequestBoardDTO requestBoardDto) {
+
         Board board = new Board();
         board.setId(board.getId());
-        board.setAuthorId(boardDto.getAuthor().getId());
-        board.setName(boardDto.getName());
-        board.setCreateDate(new Timestamp(boardDto.getCreateDate()));
-        board.setUpdateDate(new Timestamp(boardDto.getUpdateDate()));
-        board.setActive(boardDto.isActive());
+        board.setAuthorId(userMapper.mapToEntity(userMapper.getById(requestBoardDto.getAuthor())));
+        board.setName(requestBoardDto.getName());
+        board.setActive(requestBoardDto.isActive());
+        return board;
+    }
+
+    public Board mapToEntity(ResponseBoardDTO responseBoardDTO) {
+        Board board = new Board();
+        board.setId(board.getId());
+        board.setAuthorId(userMapper.mapToEntity(responseBoardDTO.getAuthor()));
+        board.setName(responseBoardDTO.getName());
+        board.setCreateDate(new Timestamp(responseBoardDTO.getCreateDate()));
+        board.setUpdateDate(new Timestamp(responseBoardDTO.getUpdateDate()));
+        board.setActive(responseBoardDTO.isActive());
         return board;
     }
 

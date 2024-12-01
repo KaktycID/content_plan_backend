@@ -1,6 +1,7 @@
 package content.plan.board.service;
 
 import content.plan.board.dto.ContentDTO;
+import content.plan.board.mapper.DictionaryMapper;
 import content.plan.board.repository.ContentRepository;
 import content.plan.board.structure.Content;
 import content.plan.users.service.UserServiceImpl;
@@ -11,17 +12,18 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.List;
 
-import static content.plan.board.mapper.Mapper.getActualTime;
-import static content.plan.board.mapper.Mapper.getContentType;
+import static content.plan.board.mapper.DictionaryMapper.getActualTime;
 
 @RequiredArgsConstructor
 @Slf4j
 @Service
 public class ContentServiceImp implements ContentService{
 
-    private static ContentRepository repository;
+    private final ContentRepository repository;
     private static DatePlanServiceImp datePlanService;
     private static UserServiceImpl userService;
+    private static UserServiceImpl userMapper;
+    private static DictionaryMapper dictMapper;
 
     @Override
     public ContentDTO getById(Long id) {
@@ -90,9 +92,9 @@ public class ContentServiceImp implements ContentService{
 
         return ContentDTO.builder()
                 .id(content.getId())
-                .datePlan(datePlanService.getById(content.getDatePlanId()))
-                .author(userService.getById(content.getAuthorId()))
-                .type(getContentType(content.getTypeId()))
+                .datePlan(datePlanService.mapToDto(content.getDatePlanId()))
+                .author(userMapper.mapToDto((content.getAuthorId())))
+                .type(dictMapper.mapContentTypeToDto(content.getTypeId()))
                 .title(content.getTitle())
                 .contentFile(content.getContentFile())
                 .description(content.getDescription())
@@ -107,9 +109,9 @@ public class ContentServiceImp implements ContentService{
     public static Content mapToEntity(ContentDTO contentDTO) {
         Content content = new Content();
         content.setId(contentDTO.getId());
-        content.setDatePlanId(contentDTO.getAuthor().getId());
-        content.setAuthorId(contentDTO.getAuthor().getId());
-        content.setTypeId(contentDTO.getType().getId());
+        content.setDatePlanId(datePlanService.mapToEntity(contentDTO.getDatePlan()));
+        content.setAuthorId(userMapper.mapToEntity(contentDTO.getAuthor()));
+        content.setTypeId(dictMapper.mapContentTypeToEntity(contentDTO.getType()));
         content.setTitle(contentDTO.getTitle());
         content.setContentFile(contentDTO.getContentFile());
         content.setDescription(contentDTO.getDescription());

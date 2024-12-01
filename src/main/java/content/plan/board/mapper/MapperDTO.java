@@ -1,5 +1,7 @@
 package content.plan.board.mapper;
 
+import content.plan.board.dto.CommentDTO;
+import content.plan.board.dto.ContentDTO;
 import content.plan.board.dto.DictDTO;
 import lombok.*;
 
@@ -12,8 +14,8 @@ import lombok.*;
 public class MapperDTO {
 
     private Long id;
-    private Long entityOne;
-    private Long entityTwo;
+    private CommentDTO entityOne;
+    private ContentDTO entityTwo;
     private DictDTO type;
     private Long createDate;
     private Long updateDate;

@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import static content.plan.board.mapper.Mapper.getActualTime;
+import static content.plan.board.mapper.DictionaryMapper.getActualTime;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -25,6 +25,7 @@ public class CommentServiceImpl implements CommentService{
     private final CommentMappingRepository mappingRepository;
     private static UserServiceImpl service;
     private static CommentMappingImp commentMappingService;
+    private static UserServiceImpl userMapper;
 
     @Override
     public CommentDTO getById(Long id) {
@@ -42,7 +43,7 @@ public class CommentServiceImpl implements CommentService{
         List<MapperDTO> commentOnContentMapping = commentMappingService.getByEntityTwo(contentId);
 
         for(MapperDTO unmappedComment : commentOnContentMapping) {
-            comments.add(getById(unmappedComment.getEntityOne()));
+            comments.add(getById(unmappedComment.getEntityOne().getId()));
         }
         return comments;
     }
@@ -81,7 +82,7 @@ public class CommentServiceImpl implements CommentService{
 
         return CommentDTO.builder()
                 .id(comment.getId())
-                .author(service.getById(comment.getAuthorId()))
+                .author(userMapper.mapToDto(comment.getAuthorId()))
                 .comment(comment.getComment())
                 .createDate(comment.getCreateDate().toInstant().toEpochMilli())
                 .updateDate(comment.getUpdateDate().toInstant().toEpochMilli())
@@ -92,7 +93,7 @@ public class CommentServiceImpl implements CommentService{
     public static Comment mapToEntity(CommentDTO commentDTO) {
         Comment comment = new Comment();
         comment.setId(comment.getId());
-        comment.setAuthorId(commentDTO.getAuthor().getId());
+        comment.setAuthorId(userMapper.mapToEntity(commentDTO.getAuthor()));
         comment.setComment(commentDTO.getComment());
         comment.setCreateDate(new Timestamp(commentDTO.getCreateDate()));
         comment.setUpdateDate(new Timestamp(commentDTO.getUpdateDate()));

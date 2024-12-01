@@ -1,6 +1,7 @@
 package content.plan.board.api;
 
-import content.plan.board.dto.BoardDTO;
+import content.plan.board.dto.RequestBoardDTO;
+import content.plan.board.dto.ResponseBoardDTO;
 import content.plan.board.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,22 +16,22 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping
-    public BoardDTO create(@RequestBody BoardDTO request) {
+    public ResponseBoardDTO create(@RequestBody RequestBoardDTO request) {
         return boardService.create(request);
     }
 
     @GetMapping("/{id}")
-    public BoardDTO getById(@PathVariable Long id) {
+    public ResponseBoardDTO getById(@PathVariable Long id) {
         return boardService.getById(id);
     }
 
     @GetMapping
-    public List<BoardDTO> getAllByAuthor(@RequestBody Long authorId) {
+    public List<ResponseBoardDTO> getAllByAuthor(@RequestBody Long authorId) {
         return boardService.getAllByAuthor(authorId);
     }
 
     @PatchMapping("/{id}")
-    public BoardDTO update(@PathVariable Long id, @RequestBody BoardDTO request) {
+    public ResponseBoardDTO update(@PathVariable Long id, @RequestBody RequestBoardDTO request) {
         return boardService.update(id, request);
     }
 

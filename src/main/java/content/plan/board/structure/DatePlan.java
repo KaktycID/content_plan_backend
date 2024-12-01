@@ -10,7 +10,7 @@ import lombok.Setter;
 import java.sql.Timestamp;
 
 @Entity
-@Table(name = "date_plan")
+@Table(name = "date_plan", schema = "content_plan")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -24,11 +24,11 @@ public class DatePlan extends ContentPlanAbstractBaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "board_id", updatable = false, nullable = false)
-    private Long boardId;
+    private Board boardId;
 
     @ManyToOne
     @JoinColumn(name = "author_id", updatable = false, nullable = false)
-    private Long authorId;
+    private Users authorId;
 
     @Column(name = "planned_date", updatable = false, nullable = false)
     private Timestamp plannedDate;

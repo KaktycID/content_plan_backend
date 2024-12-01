@@ -1,8 +1,7 @@
 package content.plan.board.dto;
 
-import content.plan.users.dto.UsersDTO;
+import content.plan.users.dto.ResponseUserDTO;
 import lombok.*;
-
 
 @Data
 @Builder
@@ -10,10 +9,10 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class BoardDTO {
+public class ResponseBoardDTO {
 
     private Long id;
-    private UsersDTO author;
+    private ResponseUserDTO author;
     private String name;
     private Long createDate;
     private Long updateDate;

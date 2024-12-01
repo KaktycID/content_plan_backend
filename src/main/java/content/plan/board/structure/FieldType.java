@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "dict_content_field_type")
+@Table(name = "dict_content_field_type", schema = "content_plan")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

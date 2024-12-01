@@ -9,7 +9,7 @@ import lombok.Setter;
 
 
 @Entity
-@Table(name = "users")
+@Table(name = "users", schema = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -30,7 +30,7 @@ public class Users extends ContentPlanAbstractBaseEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "icon_id", nullable = false)
-    private int icon;
+    private Icons icon;
 }

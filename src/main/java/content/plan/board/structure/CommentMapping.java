@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "comment_mapping")
+@Table(name = "comment_mapping", schema = "content_plan")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -21,15 +21,15 @@ public class CommentMapping extends ContentPlanAbstractBaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "content_id", updatable = false, nullable = false)
-    private Long fieldId;
+    private Content fieldId;
 
     @ManyToOne
     @JoinColumn(name = "comment_id", updatable = false, nullable = false)
-    private Long commentId;
+    private Comment commentId;
 
     @ManyToOne
     @JoinColumn(name = "type_id", updatable = false, nullable = false)
-    private int type;
+    private FieldType type;
 
 
 

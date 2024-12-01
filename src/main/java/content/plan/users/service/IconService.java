@@ -1,8 +1,9 @@
 package content.plan.users.service;
 
 import content.plan.board.dto.DictDTO;
+import content.plan.users.structure.Icons;
 
 public interface IconService {
 
-    DictDTO getById(int id);
+    Icons getById(int id);
 }

@@ -1,9 +1,7 @@
 package content.plan.board.service;
 
-import content.plan.board.dto.ContentDTO;
 import content.plan.board.dto.DatePlanDTO;
 import content.plan.board.repository.DatePlanRepository;
-import content.plan.board.structure.Content;
 import content.plan.board.structure.DatePlan;
 import content.plan.users.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
@@ -14,16 +12,16 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.List;
 
-import static content.plan.board.mapper.Mapper.getActualTime;
+import static content.plan.board.mapper.DictionaryMapper.getActualTime;
 
 @RequiredArgsConstructor
 @Slf4j
 @Service
 public class DatePlanServiceImp implements DatePlanService{
 
-    private static DatePlanRepository repository;
+    private final DatePlanRepository repository;
     private static BoardServiceImpl boardService;
-    private static UserServiceImpl userService;
+    private static UserServiceImpl userMapper;
 
     @Override
     public DatePlanDTO getById(Long id) {
@@ -74,8 +72,8 @@ public class DatePlanServiceImp implements DatePlanService{
 
         return DatePlanDTO.builder()
                 .id(datePlan.getId())
-                .board(boardService.getById(datePlan.getBoardId()))
-                .author(userService.getById(datePlan.getAuthorId()))
+                .board(boardService.mapToDto(datePlan.getBoardId()))
+                .author(userMapper.mapToDto(datePlan.getAuthorId()))
                 .plannedDate(datePlan.getPlannedDate().toInstant().toEpochMilli())
                 .createDate(datePlan.getCreateDate().toInstant().toEpochMilli())
                 .updateDate(datePlan.getUpdateDate().toInstant().toEpochMilli())
@@ -87,8 +85,8 @@ public class DatePlanServiceImp implements DatePlanService{
     public static DatePlan mapToEntity(DatePlanDTO datePlanDTO) {
         DatePlan datePlan = new DatePlan();
         datePlan.setId(datePlanDTO.getId());
-        datePlan.setBoardId(datePlanDTO.getBoard().getId());
-        datePlan.setAuthorId(datePlanDTO.getAuthor().getId());
+        datePlan.setBoardId(boardService.mapToEntity(datePlanDTO.getBoard()));
+        datePlan.setAuthorId(userMapper.mapToEntity(datePlanDTO.getAuthor()));
         datePlan.setPlannedDate(new Timestamp(datePlanDTO.getPlannedDate()));
         datePlan.setCreateDate(new Timestamp(datePlanDTO.getCreateDate()));
         datePlan.setUpdateDate(new Timestamp(datePlanDTO.getUpdateDate()));

@@ -8,12 +8,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "board_permission")
+@Table(name = "board_permission", schema = "content_plan")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class BoardPermission {
+public class BoardPermission extends ContentPlanAbstractBaseEntity{
 
     @Id
     @GeneratedValue(generator = "board_permission_seq", strategy = GenerationType.SEQUENCE)
@@ -22,16 +22,14 @@ public class BoardPermission {
 
     @ManyToOne
     @JoinColumn(name = "board_id", updatable = false, nullable = false)
-    private Long boardId;
+    private Board boardId;
 
     @ManyToOne
     @JoinColumn(name = "permission_type", updatable = false, nullable = false)
-    private int permissionType;
+    private PermissionType permissionType;
 
     @ManyToOne
     @JoinColumn(name = "user_id", updatable = false, nullable = false)
-    private Long userId;
+    private Users userId;
 
-    @Column(name = "is_active", updatable = false, nullable = false)
-    private boolean active;
 }

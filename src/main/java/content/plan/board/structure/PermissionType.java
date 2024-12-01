@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "dict_permission_type")
+@Table(name = "dict_permission_type", schema = "content_plan")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

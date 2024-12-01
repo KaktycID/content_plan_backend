@@ -1,5 +1,6 @@
 package content.plan.board.service;
 
+import content.plan.board.mapper.DictionaryMapper;
 import content.plan.board.mapper.MapperDTO;
 import content.plan.board.repository.CommentMappingRepository;
 import content.plan.board.structure.CommentMapping;
@@ -7,10 +8,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
-import static content.plan.board.mapper.Mapper.getActualTime;
-import static content.plan.board.mapper.Mapper.getFieldType;
+import static content.plan.board.mapper.DictionaryMapper.getActualTime;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -18,12 +20,15 @@ import static content.plan.board.mapper.Mapper.getFieldType;
 public class CommentMappingImp implements MappingService{
 
     private final CommentMappingRepository repository;
+    private static CommentServiceImpl commentService;
+    private static ContentServiceImp contentService;
+    private static DictionaryMapper dictMapper;
 
 
     @Override
     public List<MapperDTO> getByEntityOne(Long entityId) {
         return repository.findAll().stream()
-                .filter(i -> i.getCommentId() == entityId && i.isActive())
+                .filter(i -> Objects.equals(i.getCommentId().getId(), entityId) && i.isActive())
                 .map(CommentMappingImp::mapToDto)
                 .toList();
     }
@@ -31,7 +36,7 @@ public class CommentMappingImp implements MappingService{
     @Override
     public List<MapperDTO> getByEntityTwo(Long entityId) {
         return repository.findAll().stream()
-                .filter(i -> i.getCommentId() == entityId && i.isActive())
+                .filter(i -> Objects.equals(i.getFieldId().getId(), entityId) && i.isActive())
                 .map(CommentMappingImp::mapToDto)
                 .toList();
     }
@@ -61,9 +66,9 @@ public class CommentMappingImp implements MappingService{
 
         return MapperDTO.builder()
                 .id(commentMapping.getId())
-                .entityOne(commentMapping.getCommentId())
-                .entityTwo(commentMapping.getFieldId())
-                .type(getFieldType(commentMapping.getType()))
+                .entityOne(commentService.mapToDto(commentMapping.getCommentId()))
+                .entityTwo(contentService.mapToDto(commentMapping.getFieldId()))
+                .type(dictMapper.mapFieldTypeToDto(commentMapping.getType()))
                 .createDate(commentMapping.getCreateDate().toInstant().toEpochMilli())
                 .updateDate(commentMapping.getUpdateDate().toInstant().toEpochMilli())
                 .active(commentMapping.isActive())
@@ -72,8 +77,12 @@ public class CommentMappingImp implements MappingService{
 
     public static CommentMapping mapToEntity(MapperDTO mapperDTO) {
         CommentMapping commentMapping = new CommentMapping();
-        commentMapping.setCommentId(mapperDTO.getEntityOne());
-        commentMapping.setFieldId(mapperDTO.getEntityTwo());
+        commentMapping.setCommentId(commentService.mapToEntity(mapperDTO.getEntityOne()));
+        commentMapping.setFieldId(contentService.mapToEntity(mapperDTO.getEntityTwo()));
+        commentMapping.setType(dictMapper.mapFieldTypeToEntity(mapperDTO.getType()));
+        commentMapping.setCreateDate(new Timestamp(mapperDTO.getCreateDate()));
+        commentMapping.setUpdateDate(new Timestamp(mapperDTO.getUpdateDate()));
+        commentMapping.setActive(mapperDTO.isActive());
         return commentMapping;
     }
 }

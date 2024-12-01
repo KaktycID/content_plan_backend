@@ -5,7 +5,7 @@ import lombok.*;
 
 @Builder
 @Entity
-@Table(name = "dict_icons")
+@Table(name = "dict_icons", schema = "users")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter

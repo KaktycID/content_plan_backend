@@ -1,5 +1,6 @@
 package content.plan.board.structure;
 
+import content.plan.users.structure.Users;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "comments")
+@Table(name = "comments", schema = "content_plan")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -21,7 +22,7 @@ public class Comment extends ContentPlanAbstractBaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "author_id", updatable = false, nullable = false)
-    private Long authorId;
+    private Users authorId;
 
     @Column(name = "comment", nullable = false)
     private String comment;

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "content")
+@Table(name = "content", schema = "content_plan")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -22,15 +22,15 @@ public class Content extends ContentPlanAbstractBaseEntity{
 
     @ManyToOne
     @JoinColumn(name = "date_plan_id", updatable = false, nullable = false)
-    private Long datePlanId;
+    private DatePlan datePlanId;
 
     @ManyToOne
     @JoinColumn(name = "author_id", updatable = false, nullable = false)
-    private Long authorId;
+    private Users authorId;
 
     @ManyToOne
     @JoinColumn(name = "type_id", updatable = false, nullable = false)
-    private int typeId;
+    private ContentType typeId;
 
     @Column(name = "title", updatable = false, nullable = false)
     private String title;

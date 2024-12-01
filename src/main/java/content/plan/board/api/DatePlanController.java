@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/board/{id}/date-plan")
+@RequestMapping("/date-plan")
 @RequiredArgsConstructor
 public class DatePlanController {
 

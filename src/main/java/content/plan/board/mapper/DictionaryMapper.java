@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 import java.time.Instant;
 
 @Component
-public class Mapper {
+public class DictionaryMapper {
 
     private static FieldRepository fieldTypes;
     private static ContentTypeRepository contentTypes;
@@ -74,5 +74,47 @@ public class Mapper {
                 .id(icon.getId())
                 .title(icon.getTitle())
                 .build();
+    }
+
+    public static DictDTO mapPermissionTypes(PermissionType type) {
+        return DictDTO.builder()
+                .id(type.getId())
+                .title(type.getTitle())
+                .build();
+    }
+
+    public static PermissionType mapPermissionTypesToEntity(DictDTO type) {
+        PermissionType permissionType = new PermissionType();
+        permissionType.setId(type.getId());
+        permissionType.setTitle(type.getTitle());
+        return permissionType;
+    }
+
+    public static DictDTO mapFieldTypeToDto(FieldType type) {
+        return DictDTO.builder()
+                .id(type.getId())
+                .title(type.getTitle())
+                .build();
+    }
+
+    public static FieldType mapFieldTypeToEntity(DictDTO type) {
+        FieldType fieldType = new FieldType();
+        fieldType.setId(type.getId());
+        fieldType.setTitle(type.getTitle());
+        return fieldType;
+    }
+
+    public static DictDTO mapContentTypeToDto(ContentType type) {
+        return DictDTO.builder()
+                .id(type.getId())
+                .title(type.getTitle())
+                .build();
+    }
+
+    public static ContentType mapContentTypeToEntity(DictDTO type) {
+        ContentType contentType = new ContentType();
+        contentType.setId(type.getId());
+        contentType.setTitle(type.getTitle());
+        return contentType;
     }
 }
