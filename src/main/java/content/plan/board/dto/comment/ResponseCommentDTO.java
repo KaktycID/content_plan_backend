@@ -1,4 +1,4 @@
-package content.plan.board.dto;
+package content.plan.board.dto.comment;
 
 import content.plan.users.dto.ResponseUserDTO;
 import lombok.*;
@@ -9,12 +9,11 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class DatePlanDTO {
+public class ResponseCommentDTO {
 
     private Long id;
-    private ResponseBoardDTO board;
     private ResponseUserDTO author;
-    private Long plannedDate;
+    private String comment;
     private Long createDate;
     private Long updateDate;
     private boolean active;

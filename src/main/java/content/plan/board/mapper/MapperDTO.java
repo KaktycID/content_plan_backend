@@ -1,8 +1,8 @@
 package content.plan.board.mapper;
 
-import content.plan.board.dto.CommentDTO;
-import content.plan.board.dto.ContentDTO;
-import content.plan.board.dto.DictDTO;
+import content.plan.board.dto.comment.ResponseCommentDTO;
+import content.plan.board.dto.content.ResponseContentDTO;
+import content.plan.board.dto.DictionaryDTO;
 import lombok.*;
 
 @Data
@@ -14,9 +14,9 @@ import lombok.*;
 public class MapperDTO {
 
     private Long id;
-    private CommentDTO entityOne;
-    private ContentDTO entityTwo;
-    private DictDTO type;
+    private ResponseCommentDTO entityOne;
+    private ResponseContentDTO entityTwo;
+    private DictionaryDTO type;
     private Long createDate;
     private Long updateDate;
     private boolean active;

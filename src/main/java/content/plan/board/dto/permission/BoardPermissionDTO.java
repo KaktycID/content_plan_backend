@@ -1,5 +1,7 @@
-package content.plan.board.dto;
+package content.plan.board.dto.permission;
 
+import content.plan.board.dto.DictionaryDTO;
+import content.plan.board.dto.board.ResponseBoardDTO;
 import content.plan.users.dto.ResponseUserDTO;
 import lombok.*;
 
@@ -13,7 +15,7 @@ public class BoardPermissionDTO {
 
     private Long id;
     private ResponseBoardDTO board;
-    private DictDTO permissionType;
+    private DictionaryDTO permissionType;
     private ResponseUserDTO user;
     private Long createDate;
     private Long updateDate;

@@ -1,6 +1,6 @@
 package content.plan.users.dto;
 
-import content.plan.board.dto.DictDTO;
+import content.plan.board.dto.DictionaryDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +16,7 @@ public class ResponseUserDTO {
         private String email;
         private String password;
         private String name;
-        private DictDTO icon;
+        private DictionaryDTO icon;
         private Long createDate;
         private Long updateDate;
         private boolean active;

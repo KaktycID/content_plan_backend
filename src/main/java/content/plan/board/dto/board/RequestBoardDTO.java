@@ -1,4 +1,4 @@
-package content.plan.board.dto;
+package content.plan.board.dto.board;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.*;

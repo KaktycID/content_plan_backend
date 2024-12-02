@@ -1,6 +1,9 @@
 package content.plan.board.service;
 
-import content.plan.board.dto.DatePlanDTO;
+import content.plan.board.dto.DictionaryDTO;
+import content.plan.board.dto.plan.RequestDatePlanDTO;
+import content.plan.board.dto.plan.ResponseDatePlanDTO;
+import content.plan.board.mapper.DictionaryMapper;
 import content.plan.board.repository.DatePlanRepository;
 import content.plan.board.structure.DatePlan;
 import content.plan.users.service.UserServiceImpl;
@@ -10,9 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
-
-import static content.plan.board.mapper.DictionaryMapper.getActualTime;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -22,55 +24,60 @@ public class DatePlanServiceImp implements DatePlanService{
     private final DatePlanRepository repository;
     private static BoardServiceImpl boardService;
     private static UserServiceImpl userMapper;
+    private static DictionaryMapper dictionaryMapper;
 
     @Override
-    public DatePlanDTO getById(Long id) {
+    public ResponseDatePlanDTO getById(Long id) {
         DatePlan datePlan = repository.findById(id).orElseThrow();
         return mapToDto(datePlan);
     }
 
     @Override
-    public List<DatePlanDTO> getAllByBoardId(Long boardId) {
-        return repository.findAll()
+    public List<ResponseDatePlanDTO> getAllByBoardId(Long boardId) {
+        List<DatePlan> datePlanList = repository.findAll()
                 .stream()
-                .filter(i -> i.getBoardId().equals(boardId) && i.isActive())
-                .map(DatePlanServiceImp::mapToDto)
+                .filter(i -> i.getBoardId().getId().equals(boardId) && i.isActive())
                 .toList();
+        List<ResponseDatePlanDTO> datePlanDTOList = new ArrayList<>();
+        for (DatePlan datePlan : datePlanList) {
+            datePlanDTOList.add(mapToDto(datePlan));
+        }
+        return datePlanDTOList;
     }
 
     @Override
-    public DatePlanDTO create(DatePlanDTO datePlanDTO) {
-        DatePlan datePlan = mapToEntity(datePlanDTO);
-        datePlan.setCreateDate(getActualTime());
+    public ResponseDatePlanDTO create(RequestDatePlanDTO requestDatePlanDTO) {
+        DatePlan datePlan = mapToEntity(requestDatePlanDTO);
+        datePlan.setCreateDate(dictionaryMapper.getActualTime());
         datePlan.setActive(true);
         repository.save(datePlan);
         return mapToDto(datePlan);
     }
 
     @Override
-    public DatePlanDTO update(Long id, DatePlanDTO datePlanDTO) {
-        boolean active = Boolean.TRUE.equals(datePlanDTO.isActive());
+    public ResponseDatePlanDTO update(Long id, RequestDatePlanDTO requestDatePlanDTO) {
+        boolean active = Boolean.TRUE.equals(requestDatePlanDTO.isActive());
         DatePlan datePlan = repository.findById(id).orElseThrow();
 
         if (!active) {
 
-            if (!datePlan.getPlannedDate().equals(datePlanDTO.getPlannedDate())) {
+            if (!datePlan.getPlannedDate().equals(new Timestamp(requestDatePlanDTO.getPlannedDate()))) {
                 datePlan.setPlannedDate(Timestamp.from
-                        (Instant.ofEpochSecond(datePlanDTO.getPlannedDate())));
+                        (Instant.ofEpochSecond(requestDatePlanDTO.getPlannedDate())));
             }
         } else {
 
             datePlan.setActive(false);
         }
-        datePlan.setUpdateDate(getActualTime());
+        datePlan.setUpdateDate(dictionaryMapper.getActualTime());
         repository.save(datePlan);
 
         return mapToDto(datePlan);
     }
 
-    public static DatePlanDTO mapToDto(DatePlan datePlan) {
+    public ResponseDatePlanDTO mapToDto(DatePlan datePlan) {
 
-        return DatePlanDTO.builder()
+        return ResponseDatePlanDTO.builder()
                 .id(datePlan.getId())
                 .board(boardService.mapToDto(datePlan.getBoardId()))
                 .author(userMapper.mapToDto(datePlan.getAuthorId()))
@@ -82,15 +89,24 @@ public class DatePlanServiceImp implements DatePlanService{
 
     }
 
-    public static DatePlan mapToEntity(DatePlanDTO datePlanDTO) {
+    public DatePlan mapToEntity(RequestDatePlanDTO requestDatePlanDTO) {
         DatePlan datePlan = new DatePlan();
-        datePlan.setId(datePlanDTO.getId());
-        datePlan.setBoardId(boardService.mapToEntity(datePlanDTO.getBoard()));
-        datePlan.setAuthorId(userMapper.mapToEntity(datePlanDTO.getAuthor()));
-        datePlan.setPlannedDate(new Timestamp(datePlanDTO.getPlannedDate()));
-        datePlan.setCreateDate(new Timestamp(datePlanDTO.getCreateDate()));
-        datePlan.setUpdateDate(new Timestamp(datePlanDTO.getUpdateDate()));
-        datePlan.setActive(datePlanDTO.isActive());
+        datePlan.setBoardId(boardService.mapToEntity(boardService.getById(requestDatePlanDTO.getBoard())));
+        datePlan.setAuthorId(userMapper.mapToEntity(userMapper.getById((requestDatePlanDTO.getAuthor()))));
+        datePlan.setPlannedDate(new Timestamp(requestDatePlanDTO.getPlannedDate()));
+        datePlan.setActive(requestDatePlanDTO.isActive());
+        return datePlan;
+    }
+
+    public DatePlan mapToEntity(ResponseDatePlanDTO responseDatePlanDTO) {
+        DatePlan datePlan = new DatePlan();
+        datePlan.setId(responseDatePlanDTO.getId());
+        datePlan.setBoardId(boardService.mapToEntity(responseDatePlanDTO.getBoard()));
+        datePlan.setAuthorId(userMapper.mapToEntity(responseDatePlanDTO.getAuthor()));
+        datePlan.setPlannedDate(new Timestamp(responseDatePlanDTO.getPlannedDate()));
+        datePlan.setCreateDate(new Timestamp(responseDatePlanDTO.getCreateDate()));
+        datePlan.setUpdateDate(new Timestamp(responseDatePlanDTO.getUpdateDate()));
+        datePlan.setActive(responseDatePlanDTO.isActive());
         return datePlan;
     }
 }

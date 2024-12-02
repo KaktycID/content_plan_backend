@@ -1,11 +1,11 @@
 package content.plan.board.service;
 
-import content.plan.board.dto.RequestBoardDTO;
-import content.plan.board.dto.ResponseBoardDTO;
+import content.plan.board.dto.board.RequestBoardDTO;
+import content.plan.board.dto.board.ResponseBoardDTO;
+import content.plan.board.mapper.DictionaryMapper;
 import content.plan.board.repository.BoardRepository;
 import content.plan.board.structure.Board;
 import content.plan.users.service.UserServiceImpl;
-import content.plan.users.structure.Users;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,14 +15,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import static content.plan.board.mapper.DictionaryMapper.getActualTime;
-
 @RequiredArgsConstructor
 @Slf4j
 @Service
 public class BoardServiceImpl implements BoardService{
 
     private static UserServiceImpl service;
+    private static DictionaryMapper dictionaryMapper;
     private final BoardRepository repository;
     private final UserServiceImpl userMapper;
 
@@ -49,7 +48,7 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public ResponseBoardDTO create(RequestBoardDTO requestBoardDTO) {
         Board board = mapToEntity(requestBoardDTO);
-        board.setCreateDate(getActualTime());
+        board.setCreateDate(dictionaryMapper.getActualTime());
         board.setActive(true);
         repository.save(board);
         return mapToDto(board);
@@ -65,13 +64,13 @@ public class BoardServiceImpl implements BoardService{
 
             if (!name.equals(board.getName())) {
                 board.setName(name);
-                board.setUpdateDate(getActualTime());
+                board.setUpdateDate(dictionaryMapper.getActualTime());
             }
         }
 
         else {
             board.setActive(false);
-            board.setUpdateDate(getActualTime());
+            board.setUpdateDate(dictionaryMapper.getActualTime());
         }
 
         return mapToDto(board);

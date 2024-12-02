@@ -1,6 +1,6 @@
 package content.plan.board.service;
 
-import content.plan.board.dto.BoardPermissionDTO;
+import content.plan.board.dto.permission.BoardPermissionDTO;
 
 public interface BoardPermissionService {
 

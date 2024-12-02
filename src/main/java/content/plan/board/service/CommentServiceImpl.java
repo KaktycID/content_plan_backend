@@ -1,10 +1,13 @@
 package content.plan.board.service;
 
-import content.plan.board.dto.CommentDTO;
+import content.plan.board.dto.comment.RequestCommentDTO;
+import content.plan.board.dto.comment.ResponseCommentDTO;
+import content.plan.board.mapper.DictionaryMapper;
 import content.plan.board.mapper.MapperDTO;
 import content.plan.board.repository.CommentMappingRepository;
 import content.plan.board.repository.CommentRepository;
 import content.plan.board.structure.Comment;
+import content.plan.board.structure.CommentMapping;
 import content.plan.users.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,8 +16,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
-import static content.plan.board.mapper.DictionaryMapper.getActualTime;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -26,9 +27,10 @@ public class CommentServiceImpl implements CommentService{
     private static UserServiceImpl service;
     private static CommentMappingImp commentMappingService;
     private static UserServiceImpl userMapper;
+    private static DictionaryMapper dictionaryMapper;
 
     @Override
-    public CommentDTO getById(Long id) {
+    public ResponseCommentDTO getById(Long id) {
         Comment comment = repository.findById(id).orElseThrow();
         if (comment.isActive()) {
             return mapToDto(comment);
@@ -38,8 +40,8 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public List<CommentDTO> getAllByContentId(Long contentId) {
-        List<CommentDTO> comments = new ArrayList<>();
+    public List<ResponseCommentDTO> getAllByContentId(Long contentId) {
+        List<ResponseCommentDTO> comments = new ArrayList<>();
         List<MapperDTO> commentOnContentMapping = commentMappingService.getByEntityTwo(contentId);
 
         for(MapperDTO unmappedComment : commentOnContentMapping) {
@@ -49,28 +51,28 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public CommentDTO create(Long contentId, CommentDTO commentDTO) {
-        Comment comment = mapToEntity(commentDTO);
-        comment.setCreateDate(getActualTime());
+    public ResponseCommentDTO create(Long contentId, RequestCommentDTO requestCommentDTO) {
+        Comment comment = mapToEntity(requestCommentDTO);
+        comment.setCreateDate(dictionaryMapper.getActualTime());
         comment.setActive(true);
         repository.save(comment);
         return mapToDto(comment);
     }
 
     @Override
-    public CommentDTO update(Long commentId, Long entityId, CommentDTO commentDTO) {
-        boolean active = Boolean.TRUE.equals(commentDTO.isActive());
+    public ResponseCommentDTO update(Long commentId, Long entityId, RequestCommentDTO requestCommentDTO) {
+        boolean active = Boolean.TRUE.equals(requestCommentDTO.isActive());
         Comment comment = repository.findById(commentId).orElseThrow();
 
         if (!active) {
 
-            comment.setComment(commentDTO.getComment());
-            comment.setUpdateDate(getActualTime());
+            comment.setComment(requestCommentDTO.getComment());
+            comment.setUpdateDate(dictionaryMapper.getActualTime());
 
         } else {
 
             comment.setActive(false);
-            comment.setUpdateDate(getActualTime());
+            comment.setUpdateDate(dictionaryMapper.getActualTime());
             commentMappingService.delete(commentId, entityId);
         }
         repository.save(comment);
@@ -78,9 +80,9 @@ public class CommentServiceImpl implements CommentService{
         return mapToDto(comment);
     }
 
-    public static CommentDTO mapToDto(Comment comment) {
+    public static ResponseCommentDTO mapToDto(Comment comment) {
 
-        return CommentDTO.builder()
+        return ResponseCommentDTO.builder()
                 .id(comment.getId())
                 .author(userMapper.mapToDto(comment.getAuthorId()))
                 .comment(comment.getComment())
@@ -90,14 +92,23 @@ public class CommentServiceImpl implements CommentService{
                 .build();
     }
 
-    public static Comment mapToEntity(CommentDTO commentDTO) {
+    public static Comment mapToEntity(RequestCommentDTO requestCommentDTO) {
         Comment comment = new Comment();
         comment.setId(comment.getId());
-        comment.setAuthorId(userMapper.mapToEntity(commentDTO.getAuthor()));
-        comment.setComment(commentDTO.getComment());
-        comment.setCreateDate(new Timestamp(commentDTO.getCreateDate()));
-        comment.setUpdateDate(new Timestamp(commentDTO.getUpdateDate()));
-        comment.setActive(commentDTO.isActive());
+        comment.setAuthorId(userMapper.mapToEntity(userMapper.getById(requestCommentDTO.getAuthor())));
+        comment.setComment(requestCommentDTO.getComment());
+        comment.setActive(requestCommentDTO.isActive());
+        return comment;
+    }
+
+    public static Comment mapToEntity(ResponseCommentDTO responseCommentDTO) {
+        Comment comment = new Comment();
+        comment.setId(comment.getId());
+        comment.setAuthorId(userMapper.mapToEntity(responseCommentDTO.getAuthor()));
+        comment.setComment(responseCommentDTO.getComment());
+        comment.setCreateDate(new Timestamp(responseCommentDTO.getCreateDate()));
+        comment.setUpdateDate(new Timestamp(responseCommentDTO.getUpdateDate()));
+        comment.setActive(responseCommentDTO.isActive());
         return comment;
     }
 }

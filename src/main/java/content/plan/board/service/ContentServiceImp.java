@@ -1,6 +1,7 @@
 package content.plan.board.service;
 
-import content.plan.board.dto.ContentDTO;
+import content.plan.board.dto.content.RequestContentDTO;
+import content.plan.board.dto.content.ResponseContentDTO;
 import content.plan.board.mapper.DictionaryMapper;
 import content.plan.board.repository.ContentRepository;
 import content.plan.board.structure.Content;
@@ -10,9 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
-
-import static content.plan.board.mapper.DictionaryMapper.getActualTime;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -23,10 +23,10 @@ public class ContentServiceImp implements ContentService{
     private static DatePlanServiceImp datePlanService;
     private static UserServiceImpl userService;
     private static UserServiceImpl userMapper;
-    private static DictionaryMapper dictMapper;
+    private static DictionaryMapper dictionaryMapper;
 
     @Override
-    public ContentDTO getById(Long id) {
+    public ResponseContentDTO getById(Long id) {
         Content content = repository.findById(id).orElseThrow();
         if(content.isActive()) {
             return mapToDto(content);
@@ -35,66 +35,70 @@ public class ContentServiceImp implements ContentService{
     }
 
     @Override
-    public ContentDTO create(ContentDTO contentDTO) {
-        Content content = mapToEntity(contentDTO);
-        content.setCreateDate(getActualTime());
+    public ResponseContentDTO create(RequestContentDTO requestContentDTO) {
+        Content content = mapToEntity(requestContentDTO);
+        content.setCreateDate(dictionaryMapper.getActualTime());
         content.setActive(true);
         repository.save(content);
         return mapToDto(content);
     }
 
     @Override
-    public List<ContentDTO> getAllByDatePlanId(Long datePlanId) {
-        return repository.findAll()
+    public List<ResponseContentDTO> getAllByDatePlanId(Long datePlanId) {
+        List<Content> contentList = repository.findAll()
                 .stream()
-                .filter(i -> i.getDatePlanId().equals(datePlanId) && i.isActive())
-                .map(ContentServiceImp::mapToDto)
+                .filter(i -> i.getDatePlanId().getId().equals(datePlanId) && i.isActive())
                 .toList();
+        List<ResponseContentDTO> contentDtoList = new ArrayList<>();
+        for (Content content : contentList) {
+            contentDtoList.add(mapToDto(content));
+        }
+        return contentDtoList;
     }
 
     @Override
-    public ContentDTO update(Long id, ContentDTO contentDTO) {
-        boolean active = Boolean.TRUE.equals(contentDTO.isActive());
+    public ResponseContentDTO update(Long id, RequestContentDTO responseContentDTO) {
+        boolean active = Boolean.TRUE.equals(responseContentDTO.isActive());
         Content content = repository.findById(id).orElseThrow();
 
         if (!active) {
 
-            if(!contentDTO.getTitle().equals(content.getTitle())){
-                content.setTitle(contentDTO.getTitle());
+            if(!responseContentDTO.getTitle().equals(content.getTitle())){
+                content.setTitle(responseContentDTO.getTitle());
             }
 
-            if (!contentDTO.getContentFile().equals(content.getContentFile())){
-                content.setContentFile(contentDTO.getContentFile());
+            if (!responseContentDTO.getContentFile().equals(content.getContentFile())){
+                content.setContentFile(responseContentDTO.getContentFile());
             }
 
-            if (!contentDTO.getDescription().equals(content.getDescription())){
-                content.setDescription((contentDTO.getDescription()));
+            if (!responseContentDTO.getDescription().equals(content.getDescription())){
+                content.setDescription((responseContentDTO.getDescription()));
             }
 
-            if (!contentDTO.getHashtags().equals(content.getHashtags())) {
-                content.setHashtags(contentDTO.getHashtags());
+            if (!responseContentDTO.getHashtags().equals(content.getHashtags())) {
+                content.setHashtags(responseContentDTO.getHashtags());
             }
-            if (!contentDTO.getAudio().equals(content.getAudio())) {
-                content.setAudio(contentDTO.getAudio());
+            if (!responseContentDTO.getAudio().equals(content.getAudio())) {
+                content.setAudio(responseContentDTO.getAudio());
             }
 
         } else {
             content.setActive(false);
         }
 
-        content.setUpdateDate(getActualTime());
+        content.setUpdateDate(dictionaryMapper.getActualTime());
         repository.save(content);
 
         return mapToDto(content);
     }
 
-    public static ContentDTO mapToDto(Content content) {
+    public ResponseContentDTO mapToDto(Content content) {
 
-        return ContentDTO.builder()
+        return ResponseContentDTO.builder()
                 .id(content.getId())
                 .datePlan(datePlanService.mapToDto(content.getDatePlanId()))
                 .author(userMapper.mapToDto((content.getAuthorId())))
-                .type(dictMapper.mapContentTypeToDto(content.getTypeId()))
+                .type(dictionaryMapper.mapContentTypeToDto(content.getTypeId()))
                 .title(content.getTitle())
                 .contentFile(content.getContentFile())
                 .description(content.getDescription())
@@ -106,20 +110,34 @@ public class ContentServiceImp implements ContentService{
                 .build();
     }
 
-    public static Content mapToEntity(ContentDTO contentDTO) {
+    public Content mapToEntity(RequestContentDTO requestContentDTO) {
         Content content = new Content();
-        content.setId(contentDTO.getId());
-        content.setDatePlanId(datePlanService.mapToEntity(contentDTO.getDatePlan()));
-        content.setAuthorId(userMapper.mapToEntity(contentDTO.getAuthor()));
-        content.setTypeId(dictMapper.mapContentTypeToEntity(contentDTO.getType()));
-        content.setTitle(contentDTO.getTitle());
-        content.setContentFile(contentDTO.getContentFile());
-        content.setDescription(contentDTO.getDescription());
-        content.setHashtags(contentDTO.getHashtags());
-        content.setAudio(contentDTO.getAudio());
-        content.setCreateDate(new Timestamp(contentDTO.getCreateDate()));
-        content.setUpdateDate(new Timestamp(contentDTO.getUpdateDate()));
-        content.setActive(contentDTO.isActive());
+        content.setDatePlanId(datePlanService.mapToEntity(datePlanService.getById(requestContentDTO.getDatePlan())));
+        content.setAuthorId(userMapper.mapToEntity(userMapper.getById(requestContentDTO.getAuthor())));
+        content.setTypeId(dictionaryMapper.mapContentTypeToEntity(dictionaryMapper.getContentType(requestContentDTO.getType())));
+        content.setTitle(requestContentDTO.getTitle());
+        content.setContentFile(requestContentDTO.getContentFile());
+        content.setDescription(requestContentDTO.getDescription());
+        content.setHashtags(requestContentDTO.getHashtags());
+        content.setAudio(requestContentDTO.getAudio());
+        content.setActive(requestContentDTO.isActive());
+        return content;
+    }
+
+    public static Content mapToEntity(ResponseContentDTO responseContentDTO) {
+        Content content = new Content();
+        content.setId(responseContentDTO.getId());
+        content.setDatePlanId(datePlanService.mapToEntity(responseContentDTO.getDatePlan()));
+        content.setAuthorId(userMapper.mapToEntity(responseContentDTO.getAuthor()));
+        content.setTypeId(dictionaryMapper.mapContentTypeToEntity(responseContentDTO.getType()));
+        content.setTitle(responseContentDTO.getTitle());
+        content.setContentFile(responseContentDTO.getContentFile());
+        content.setDescription(responseContentDTO.getDescription());
+        content.setHashtags(responseContentDTO.getHashtags());
+        content.setAudio(responseContentDTO.getAudio());
+        content.setCreateDate(new Timestamp(responseContentDTO.getCreateDate()));
+        content.setUpdateDate(new Timestamp(responseContentDTO.getUpdateDate()));
+        content.setActive(responseContentDTO.isActive());
         return content;
     }
 }

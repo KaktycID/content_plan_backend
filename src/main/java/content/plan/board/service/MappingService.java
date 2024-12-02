@@ -1,6 +1,5 @@
 package content.plan.board.service;
 
-import content.plan.board.dto.DictDTO;
 import content.plan.board.mapper.MapperDTO;
 
 import java.util.List;

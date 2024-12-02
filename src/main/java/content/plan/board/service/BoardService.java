@@ -1,7 +1,7 @@
 package content.plan.board.service;
 
-import content.plan.board.dto.RequestBoardDTO;
-import content.plan.board.dto.ResponseBoardDTO;
+import content.plan.board.dto.board.RequestBoardDTO;
+import content.plan.board.dto.board.ResponseBoardDTO;
 
 import java.util.List;
 

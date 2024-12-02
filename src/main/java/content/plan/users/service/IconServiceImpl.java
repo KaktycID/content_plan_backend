@@ -1,13 +1,11 @@
 package content.plan.users.service;
 
-import content.plan.board.dto.DictDTO;
+import content.plan.board.dto.DictionaryDTO;
 import content.plan.users.repository.IconsRepository;
 import content.plan.users.structure.Icons;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import static content.plan.board.mapper.DictionaryMapper.mapIcons;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -22,14 +20,14 @@ public class IconServiceImpl implements IconService{
        return icon;
     }
 
-    public DictDTO mapIconToDTO(Icons icon) {
-        return DictDTO.builder()
+    public DictionaryDTO mapIconToDTO(Icons icon) {
+        return DictionaryDTO.builder()
                 .id(icon.getId())
                 .title(icon.getTitle())
                 .build();
     }
 
-    public Icons mapIconToEntity(DictDTO iconDto) {
+    public Icons mapIconToEntity(DictionaryDTO iconDto) {
         Icons icon = new Icons();
         icon.setId(iconDto.getId());
         icon.setTitle(iconDto.getTitle());

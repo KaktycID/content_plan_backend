@@ -1,4 +1,4 @@
-package content.plan.board.dto;
+package content.plan.board.dto.board;
 
 import content.plan.users.dto.ResponseUserDTO;
 import lombok.*;

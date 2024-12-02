@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DictDTO {
+public class DictionaryDTO {
 
     private int id;
     private String title;

@@ -1,5 +1,7 @@
-package content.plan.board.dto;
+package content.plan.board.dto.content;
 
+import content.plan.board.dto.DictionaryDTO;
+import content.plan.board.dto.plan.ResponseDatePlanDTO;
 import content.plan.users.dto.ResponseUserDTO;
 import lombok.*;
 
@@ -9,12 +11,12 @@ import lombok.*;
 @AllArgsConstructor
 @Getter
 @Setter
-public class ContentDTO {
+public class ResponseContentDTO {
 
     private Long id;
-    private DatePlanDTO datePlan;
+    private ResponseDatePlanDTO datePlan;
     private ResponseUserDTO author;
-    private DictDTO type;
+    private DictionaryDTO type;
     private String title;
     private String contentFile;
     private String description;

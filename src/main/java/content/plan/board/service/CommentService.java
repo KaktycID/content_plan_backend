@@ -1,13 +1,14 @@
 package content.plan.board.service;
 
-import content.plan.board.dto.CommentDTO;
+import content.plan.board.dto.comment.RequestCommentDTO;
+import content.plan.board.dto.comment.ResponseCommentDTO;
 
 import java.util.List;
 
 public interface CommentService {
 
-    CommentDTO getById(Long id);
-    List<CommentDTO> getAllByContentId(Long contentId);
-    CommentDTO create(Long contentId, CommentDTO commentDTO);
-    CommentDTO update(Long id, Long entityId, CommentDTO commentDTO);
+    ResponseCommentDTO getById(Long id);
+    List<ResponseCommentDTO> getAllByContentId(Long contentId);
+    ResponseCommentDTO create(Long contentId, RequestCommentDTO requestCommentDTO);
+    ResponseCommentDTO update(Long id, Long entityId, RequestCommentDTO requestCommentDTO);
 }

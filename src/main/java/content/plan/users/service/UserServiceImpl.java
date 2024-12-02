@@ -1,5 +1,6 @@
 package content.plan.users.service;
 
+import content.plan.board.mapper.DictionaryMapper;
 import content.plan.users.dto.RequestUserDTO;
 import content.plan.users.dto.ResponseUserDTO;
 import content.plan.users.repository.UsersRepository;
@@ -11,8 +12,6 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 
-import static content.plan.board.mapper.DictionaryMapper.getActualTime;
-
 @RequiredArgsConstructor
 @Slf4j
 @Service
@@ -22,6 +21,7 @@ public class UserServiceImpl implements UserService{
     private final IconServiceImpl iconMapper;
 
     private final UsersRepository repository;
+    private static DictionaryMapper dictionaryMapper;
 
     @Override
     public Users getUser(Long id) {
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public ResponseUserDTO create(RequestUserDTO requestUserDTOUserDTO) {
         Users user = mapToEntity(requestUserDTOUserDTO);
-        user.setCreateDate(getActualTime());
+        user.setCreateDate(dictionaryMapper.getActualTime());
         user.setActive(true);
         repository.save(user);
         return mapToDto(user);

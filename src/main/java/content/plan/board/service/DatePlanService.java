@@ -1,14 +1,15 @@
 package content.plan.board.service;
 
-import content.plan.board.dto.DatePlanDTO;
+import content.plan.board.dto.plan.RequestDatePlanDTO;
+import content.plan.board.dto.plan.ResponseDatePlanDTO;
 
 import java.util.List;
 
 public interface DatePlanService {
 
-    DatePlanDTO getById(Long id);
-    List<DatePlanDTO> getAllByBoardId(Long boardId);
-    DatePlanDTO create(DatePlanDTO datePlanDTO);
-    DatePlanDTO update(Long id, DatePlanDTO datePlanDTO);
+    ResponseDatePlanDTO getById(Long id);
+    List<ResponseDatePlanDTO> getAllByBoardId(Long boardId);
+    ResponseDatePlanDTO create(RequestDatePlanDTO requestDatePlanDTO);
+    ResponseDatePlanDTO update(Long id, RequestDatePlanDTO requestDatePlanDTO);
 
 }
