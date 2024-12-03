@@ -1,5 +1,6 @@
 package content.plan.board.structure;
 
+import content.plan.board.structure.enums.BoardPermissionEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,10 +16,15 @@ import lombok.Setter;
 public class PermissionType {
 
     @Id
-    @GeneratedValue(generator = "dict_permission_type_seq", strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "dict_permission_type_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "dict_permission_type_id_seq", sequenceName = "dict_permission_type_id_seq", allocationSize = 1, schema = "content_plan")
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
 
     @Column(name = "title", updatable = false, nullable = false)
     private String title;
+
+    @Column(name = "code")
+    @Enumerated(EnumType.STRING)
+    private BoardPermissionEnum code;
 }

@@ -13,13 +13,11 @@ spring:
         show-sql: true
         database: content_plan
         default_schema: content_plan
-        id:
-          db_structure_naming_strategy: single
     hibernate:
-      use-new-id-generator-mappings: false
-      hbm2ddl:
-        auto: validate
       ddl-auto: validate
+      id:
+        sequence:
+          increment_size_mismatch_strategy: LOG
 
 server:
   port: 8088

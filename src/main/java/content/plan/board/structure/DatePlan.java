@@ -18,7 +18,8 @@ import java.sql.Timestamp;
 public class DatePlan extends ContentPlanAbstractBaseEntity{
 
     @Id
-    @GeneratedValue(generator = "date_plan_seq", strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "date_plan_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "date_plan_id_seq", sequenceName = "date_plan_id_seq", allocationSize = 1, schema = "content_plan")
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 

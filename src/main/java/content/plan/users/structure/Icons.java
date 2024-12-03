@@ -13,7 +13,8 @@ import lombok.*;
 public class Icons {
 
     @Id
-    @GeneratedValue(generator = "dict_icons_seq", strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "dict_icons_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "dict_icons_id_seq", sequenceName = "dict_icons_id_seq", allocationSize = 1, schema = "users")
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
 

@@ -1,8 +1,7 @@
-package content.plan.board.mapper;
+package content.plan.board.dto;
 
 import content.plan.board.dto.comment.ResponseCommentDTO;
 import content.plan.board.dto.content.ResponseContentDTO;
-import content.plan.board.dto.DictionaryDTO;
 import lombok.*;
 
 @Data

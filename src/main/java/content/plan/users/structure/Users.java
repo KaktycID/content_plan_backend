@@ -17,7 +17,8 @@ import lombok.Setter;
 public class Users extends ContentPlanAbstractBaseEntity {
 
     @Id
-    @GeneratedValue(generator = "users_seq", strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "users_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "users_id_seq", sequenceName = "users_id_seq", allocationSize = 1, schema = "users")
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 

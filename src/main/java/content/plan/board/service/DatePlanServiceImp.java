@@ -80,7 +80,7 @@ public class DatePlanServiceImp implements DatePlanService{
         return ResponseDatePlanDTO.builder()
                 .id(datePlan.getId())
                 .board(boardService.mapToDto(datePlan.getBoardId()))
-                .author(userMapper.mapToDto(datePlan.getAuthorId()))
+                .author(userMapper.mapToDtoShort(datePlan.getAuthorId()))
                 .plannedDate(datePlan.getPlannedDate().toInstant().toEpochMilli())
                 .createDate(datePlan.getCreateDate().toInstant().toEpochMilli())
                 .updateDate(datePlan.getUpdateDate().toInstant().toEpochMilli())

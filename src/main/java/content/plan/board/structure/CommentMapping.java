@@ -15,7 +15,8 @@ import lombok.Setter;
 public class CommentMapping extends ContentPlanAbstractBaseEntity{
 
     @Id
-    @GeneratedValue(generator = "comment_mapping_seq", strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "comment_mapping_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "comment_mapping_id_seq", sequenceName = "comment_mapping_id_seq", allocationSize = 1, schema = "content_plan")
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 

@@ -1,6 +1,6 @@
 package content.plan.board.service;
 
-import content.plan.board.mapper.MapperDTO;
+import content.plan.board.dto.MapperDTO;
 
 import java.util.List;
 

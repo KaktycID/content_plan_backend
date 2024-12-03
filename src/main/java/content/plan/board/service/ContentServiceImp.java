@@ -97,7 +97,7 @@ public class ContentServiceImp implements ContentService{
         return ResponseContentDTO.builder()
                 .id(content.getId())
                 .datePlan(datePlanService.mapToDto(content.getDatePlanId()))
-                .author(userMapper.mapToDto((content.getAuthorId())))
+                .author(userMapper.mapToDtoShort((content.getAuthorId())))
                 .type(dictionaryMapper.mapContentTypeToDto(content.getTypeId()))
                 .title(content.getTitle())
                 .contentFile(content.getContentFile())
@@ -124,7 +124,7 @@ public class ContentServiceImp implements ContentService{
         return content;
     }
 
-    public static Content mapToEntity(ResponseContentDTO responseContentDTO) {
+    public Content mapToEntity(ResponseContentDTO responseContentDTO) {
         Content content = new Content();
         content.setId(responseContentDTO.getId());
         content.setDatePlanId(datePlanService.mapToEntity(responseContentDTO.getDatePlan()));

@@ -3,8 +3,11 @@ package content.plan.board.service;
 import content.plan.board.dto.board.RequestBoardDTO;
 import content.plan.board.dto.board.ResponseBoardDTO;
 import content.plan.board.mapper.DictionaryMapper;
+import content.plan.board.repository.BoardPermissionRepository;
 import content.plan.board.repository.BoardRepository;
 import content.plan.board.structure.Board;
+import content.plan.board.structure.BoardPermission;
+import content.plan.board.structure.enums.BoardPermissionEnum;
 import content.plan.users.service.UserServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,15 +18,20 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import static content.plan.board.mapper.DictionaryMapper.getActualTime;
+import static content.plan.board.structure.enums.BoardPermissionEnum.AUTHOR;
+import static content.plan.board.structure.enums.BoardPermissionEnum.READER;
+
+
 @RequiredArgsConstructor
 @Slf4j
 @Service
 public class BoardServiceImpl implements BoardService{
 
-    private static UserServiceImpl service;
-    private static DictionaryMapper dictionaryMapper;
     private final BoardRepository repository;
     private final UserServiceImpl userMapper;
+    private final BoardPermissionRepository boardPermissionRepository;
+    private final DictionaryMapper dictionaryMapper;
 
 
     @Override
@@ -48,9 +56,10 @@ public class BoardServiceImpl implements BoardService{
     @Override
     public ResponseBoardDTO create(RequestBoardDTO requestBoardDTO) {
         Board board = mapToEntity(requestBoardDTO);
-        board.setCreateDate(dictionaryMapper.getActualTime());
+        board.setCreateDate(getActualTime());
         board.setActive(true);
         repository.save(board);
+        createMapping(board.getAuthorId().getId(), board.getId());
         return mapToDto(board);
     }
 
@@ -59,21 +68,76 @@ public class BoardServiceImpl implements BoardService{
         boolean active = Boolean.TRUE.equals(requestBoardDTO.isActive());
         String name = requestBoardDTO.getName();
         Board board = repository.findById(id).orElseThrow();
+        Long userId = requestBoardDTO.getAuthor();
+        boolean editable = checkEdite(getByUserIdAndBoardId(userId, id));
 
-        if (!active) {
+        boolean deletable = checkDelete(getByUserIdAndBoardId(userId, id));
+
+        if (!active && editable) {
 
             if (!name.equals(board.getName())) {
                 board.setName(name);
-                board.setUpdateDate(dictionaryMapper.getActualTime());
+                board.setUpdateDate(getActualTime());
             }
         }
 
-        else {
+        if (!active && deletable) {
             board.setActive(false);
-            board.setUpdateDate(dictionaryMapper.getActualTime());
+            board.setUpdateDate(getActualTime());
         }
 
+        repository.save(board);
         return mapToDto(board);
+    }
+
+
+    @Override
+    public List<BoardPermission> getByUserIdAndBoardId(Long userId, Long boardId) {
+        return boardPermissionRepository.findAll()
+                .stream()
+                .filter(i -> i.getUserId().getId().equals(userId) && i.isActive()
+                        && i.getBoardId().getId().equals(boardId))
+                .toList();
+    }
+
+    @Override
+    public void createMapping(Long userId, Long boardId) {
+        BoardPermission permission = new BoardPermission();
+        Board board = repository.findById(boardId).orElseThrow();
+        permission.setUserId(userMapper.getUser(userId));
+        permission.setBoardId(board);
+        permission.setPermissionType(
+                dictionaryMapper.mapPermissionTypesToEntity(
+                        dictionaryMapper.getPermissionType(AUTHOR)));
+        permission.setActive(true);
+        boardPermissionRepository.save(permission);
+    }
+
+    @Override
+    public void deleteMapping(Long id, boolean active) {
+        if (Boolean.TRUE.equals(active)) {
+            BoardPermission permission = boardPermissionRepository.findById(id).get();
+            permission.setActive(false);
+            boardPermissionRepository.save(permission);
+        }
+    }
+
+    @Override
+    public boolean checkEdite(List<BoardPermission> boardPermissionList) {
+        List<BoardPermissionEnum> types = new ArrayList<>();
+        for (BoardPermission permission : boardPermissionList) {
+            types.add(permission.getPermissionType().getCode());
+        }
+        return types.contains(READER);
+    }
+
+    @Override
+    public boolean checkDelete(List<BoardPermission> boardPermissionList) {
+        List<BoardPermissionEnum> types = new ArrayList<>();
+        for (BoardPermission permission : boardPermissionList) {
+            types.add(permission.getPermissionType().getCode());
+        }
+        return types.contains(AUTHOR);
     }
 
 
@@ -81,7 +145,7 @@ public class BoardServiceImpl implements BoardService{
 
         return ResponseBoardDTO.builder()
                 .id(board.getId())
-                .author(userMapper.mapToDto(board.getAuthorId()))
+                .author(userMapper.mapToDtoShort(board.getAuthorId()))
                 .name(board.getName())
                 .createDate(board.getCreateDate().toInstant().toEpochMilli())
                 .updateDate(board.getUpdateDate().toInstant().toEpochMilli())

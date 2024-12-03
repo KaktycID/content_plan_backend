@@ -1,5 +1,6 @@
 package content.plan.users.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import content.plan.board.dto.DictionaryDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseUserDTO {
 
         private Long id;

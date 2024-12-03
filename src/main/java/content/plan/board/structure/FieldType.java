@@ -15,7 +15,8 @@ import lombok.Setter;
 public class FieldType {
 
     @Id
-    @GeneratedValue(generator = "dict_content_field_type_seq", strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(generator = "dict_content_field_type_id_seq", strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "dict_content_field_type", sequenceName = "dict_content_field_type", allocationSize = 1, schema = "content_plan")
     @Column(name = "id", updatable = false, nullable = false)
     private int id;
 

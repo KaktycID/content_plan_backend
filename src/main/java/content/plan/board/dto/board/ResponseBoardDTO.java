@@ -1,5 +1,6 @@
 package content.plan.board.dto.board;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import content.plan.users.dto.ResponseUserDTO;
 import lombok.*;
 

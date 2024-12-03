@@ -92,6 +92,15 @@ public class UserServiceImpl implements UserService{
                 .build();
     }
 
+    public ResponseUserDTO mapToDtoShort(Users users) {
+        return ResponseUserDTO.builder()
+                .id(users.getId())
+                .name(users.getName())
+                .icon(iconMapper.mapIconToDTO(users.getIcon()))
+                .active(users.isActive())
+                .build();
+    }
+
     public Users mapToEntity(ResponseUserDTO responseUserDTO) {
         Users user = new Users();
         user.setId(responseUserDTO.getId());
