@@ -9,9 +9,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 
 
-@EnableJpaRepositories("content.plan")
-@EntityScan("content.plan")
-@ComponentScan("content.plan")
+@EnableJpaRepositories("content")
+@EntityScan("content")
+@ComponentScan("content")
 @SpringBootApplication
 public class ContentPlanApplication {
 

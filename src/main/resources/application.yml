@@ -23,4 +23,4 @@ server:
   port: 8088
 logging:
   level:
-    content.plan: debug
+    content: debug
