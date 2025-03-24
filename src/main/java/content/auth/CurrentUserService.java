@@ -1,6 +1,5 @@
 package content.auth;
 
-import content.handler.exceptions.NotFoundException;
 import content.users.structure.Users;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;

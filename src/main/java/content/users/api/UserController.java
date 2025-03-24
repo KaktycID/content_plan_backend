@@ -4,10 +4,8 @@ import content.auth.RequiresAuthentication;
 import content.users.dto.RequestUserDTO;
 import content.users.dto.ResponseUserDTO;
 import content.users.service.UserService;
-import content.auth.AuthResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j

@@ -9,7 +9,6 @@ import content.users.repository.UsersRepository;
 import content.users.structure.Users;
 import content.handler.exceptions.BadRequestException;
 import content.handler.exceptions.NotFoundException;
-import content.auth.AuthResponse;
 import content.auth.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,8 +29,6 @@ import static content.board.mapper.DictionaryMapper.getActualTime;
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService{
-
-    public static final NotFoundException NOT_FOUND_EXCEPTION = new NotFoundException("Пользователь не найден");
 
     private final IconServiceImpl iconMapper;
     private final JwtService jwtService;

@@ -14,7 +14,6 @@ import java.util.Map;
 public class JwtService {
 
     private final String SECRET_KEY = "your_secret_key"; // Замените на свой секретный ключ
-    private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 час
 
     public String generateToken(String email) {
         Map<String, Object> claims = new HashMap<>();
@@ -22,6 +21,8 @@ public class JwtService {
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
+        // 1 час
+        long EXPIRATION_TIME = 1000 * 60 * 60;
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)

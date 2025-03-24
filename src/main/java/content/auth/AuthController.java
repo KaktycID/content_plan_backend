@@ -1,6 +1,5 @@
 package content.auth;
 
-import content.users.dto.RequestUserDTO;
 import content.users.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

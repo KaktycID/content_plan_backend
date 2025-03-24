@@ -3,7 +3,6 @@ package content.users.service;
 import content.users.dto.RequestUserDTO;
 import content.users.dto.ResponseUserDTO;
 import content.users.structure.Users;
-import content.auth.AuthResponse;
 
 public interface UserService {
 
