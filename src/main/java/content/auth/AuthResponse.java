@@ -1,4 +1,4 @@
-package content.users.token;
+package content.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -23,4 +23,13 @@ server:
   port: 8088
 logging:
   level:
-    content: debug
+    root: INFO
+    content_plan: DEBUG
+    org:
+      springframework:
+        security: DEBUG
+  file:
+    name: app.log
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+

@@ -1,8 +1,9 @@
-package content.users.token;
+package content.auth;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -15,22 +16,23 @@ public class JwtService {
     private final String SECRET_KEY = "your_secret_key"; // Замените на свой секретный ключ
     private final long EXPIRATION_TIME = 1000 * 60 * 60; // 1 час
 
-    public AuthResponse generateToken(String email) {
-//        Map<String, Object> claims = new HashMap<>();
-        return createToken(email); //claims,
+    public String generateToken(String email) {
+        Map<String, Object> claims = new HashMap<>();
+        return createToken(claims, email); //claims,
     }
 
-    private AuthResponse createToken(String subject) { //Map<String, Object> claims,
-        return new AuthResponse(Jwts.builder()
-//                .setClaims(claims)
+    private String createToken(Map<String, Object> claims, String subject) {
+        return Jwts.builder()
+                .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
-                .compact());
+                .compact();
     }
 
-    public boolean validateToken(String token, String email) {
+    public boolean validateToken(String token, UserDetails userDetails) {
+        String email = userDetails.getUsername();
         final String username = extractUsername(token);
         return (username.equals(email) && !isTokenExpired(token));
     }

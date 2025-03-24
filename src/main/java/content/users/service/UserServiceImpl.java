@@ -1,5 +1,6 @@
 package content.users.service;
 
+import content.auth.CustomUserDetails;
 import content.board.mapper.DictionaryMapper;
 import content.handler.exceptions.UnauthorizedException;
 import content.users.dto.RequestUserDTO;
@@ -8,15 +9,18 @@ import content.users.repository.UsersRepository;
 import content.users.structure.Users;
 import content.handler.exceptions.BadRequestException;
 import content.handler.exceptions.NotFoundException;
-import content.users.token.AuthResponse;
-import content.users.token.JwtService;
+import content.auth.AuthResponse;
+import content.auth.JwtService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.catalina.User;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
+import java.util.Base64;
 import java.util.Optional;
 
 import static content.board.mapper.DictionaryMapper.getActualTime;
@@ -38,29 +42,48 @@ public class UserServiceImpl implements UserService{
     public ResponseUserDTO me(String authorizationHeader) {
         String token = authorizationHeader.substring(7); // Убираем "Bearer " из начала
         String email = jwtService.extractUsername(token);
+        Optional<Users> userByEmail = repository.findByEmail(email);
+        if (userByEmail.isPresent()) {
+            Users user = userByEmail.get();
+            CustomUserDetails userDetails = new CustomUserDetails(user); // Создаем CustomUserDetails
+
             // Проверяем токен
-            if (jwtService.validateToken(token, email)) {
-                 // Извлекаем email из токена
-                Optional<Users> userByEmail = repository.findByEmail(email);
-                if (userByEmail.isPresent()) {
-                    Users user = userByEmail.get();
-                    return mapToDto(user);
-                    } else {
-                        throw new UnauthorizedException("Неавторизованный доступ");
-                    }
+            if (jwtService.validateToken(token, userDetails)) {
+                return mapToDto(user); // Возвращаем DTO пользователя
             } else {
                 throw new UnauthorizedException("Неавторизованный доступ");
             }
-
+        } else {
+            throw new UnauthorizedException("Неавторизованный доступ");
+        }
     }
 
     @Override
-    public AuthResponse auth(RequestUserDTO requestUserDTOUserDTO) {
-        Optional<Users> userByEmail = repository.findByEmail(requestUserDTOUserDTO.getEmail());
+    public String auth(String authorizationHeader) {
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Basic ")) {
+            throw new UnauthorizedException("Неавторизованный доступ");
+        }
+
+        // Извлекаем и декодируем учетные данные
+        String base64Credentials = authorizationHeader.substring("Basic ".length()).trim();
+        String credentials = new String(Base64.getDecoder().decode(base64Credentials));
+        final String[] values = credentials.split(":", 2);
+
+        String email = values[0];
+        String password = values[1];
+
+        Optional<Users> userByEmail = repository.findByEmail(email);
         if (userByEmail.isPresent()) {
             Users user = userByEmail.get();
-            if (user.isActive() && user.getPassword().equals(requestUserDTOUserDTO.getPassword())) {
-                return jwtService.generateToken(requestUserDTOUserDTO.getEmail());
+            if (user.isActive() && user.getPassword().equals(password)) {
+                // Устанавливаем Authentication в SecurityContextHolder
+                CustomUserDetails userDetails = new CustomUserDetails(user);
+                // Устанавливаем Authentication в SecurityContextHolder
+                Authentication auth = new UsernamePasswordAuthenticationToken(userDetails, null, null);
+                SecurityContextHolder.getContext().setAuthentication(auth);
+
+
+                return jwtService.generateToken(email); // Генерация JWT
             } else {
                 throw new UnauthorizedException("Неверный пароль");
             }
@@ -68,6 +91,8 @@ public class UserServiceImpl implements UserService{
             throw new NotFoundException("Пользователь не найден");
         }
     }
+
+
 
 
     @Override

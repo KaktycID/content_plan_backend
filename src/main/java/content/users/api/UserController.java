@@ -1,11 +1,13 @@
 package content.users.api;
 
+import content.auth.RequiresAuthentication;
 import content.users.dto.RequestUserDTO;
 import content.users.dto.ResponseUserDTO;
 import content.users.service.UserService;
-import content.users.token.AuthResponse;
+import content.auth.AuthResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @Slf4j
@@ -17,16 +19,12 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/me")
+    @RequiresAuthentication
     public ResponseUserDTO me(@RequestHeader("Authorization") String token) {
         return userService.me(token);}
 
-    @PostMapping("/auth")
-    @ResponseBody
-    public AuthResponse auth(@RequestBody RequestUserDTO requestUserDTO) {
-        return userService.auth(requestUserDTO);
-    }
-
     @GetMapping("/{id}")
+    @RequiresAuthentication
     public ResponseUserDTO getById(@PathVariable Long id) {return userService.getById(id);}
 
     @PostMapping
@@ -36,6 +34,7 @@ public class UserController {
     }
 
     @PatchMapping("/{id}")
+    @RequiresAuthentication
     public ResponseUserDTO update(@PathVariable Long id, @RequestBody RequestUserDTO responseUserDTO) {
         return userService.update(id, responseUserDTO);
     }
